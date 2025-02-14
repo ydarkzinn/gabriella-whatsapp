@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta http-equiv="refresh" content="0; url=https://wa.me/5519971132349?text=Quero%20entrar%20no%20VIP!%20Gabriella" />
-  <title>Redirecionando...</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typebot Automático</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        iframe {
+            width: 90%;
+            height: 80vh;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-  Se não for redirecionado automaticamente, <a href="https://wa.me/5519971132349?text=Quero%20entrar%20no%20VIP!%20Gabriella">clique aqui</a>.
+    <iframe id="typebotFrame" src=""></iframe>
+    
+    <script>
+        const links = [
+            "https://typebot.co/gabriellaa1", 
+            "https://typebot.co/gabriellaa2", 
+            "https://typebot.co/gabriellaa3", 
+            "https://typebot.co/gabriellaa4", 
+            "https://typebot.co/gabriellaa5"
+        ];
+        
+        let contadorVisitas = 0;
+        let indexAtual = 0;
+        const maxVisitas = 200;
+        
+        function carregarPagina() {
+            document.getElementById("typebotFrame").src = links[indexAtual];
+        }
+        
+        function atualizarPagina() {
+            contadorVisitas++;
+            if (contadorVisitas >= maxVisitas) {
+                indexAtual = (indexAtual + 1) % links.length;
+                contadorVisitas = 0;
+                carregarPagina();
+            }
+        }
+        
+        carregarPagina();
+        setInterval(atualizarPagina, 5000); // Checa a cada 5 segundos se precisa mudar a URL
+    </script>
 </body>
 </html>

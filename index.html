@@ -25,32 +25,34 @@
     
     <script>
         const links = [
-            "https://typebot.co/gabriellaa1", 
-            "https://typebot.co/gabriellaa2", 
-            "https://typebot.co/gabriellaa3", 
-            "https://typebot.co/gabriellaa4", 
-            "https://typebot.co/gabriellaa5"
+            "https://typebot1.com", 
+            "https://typebot2.com", 
+            "https://typebot3.com", 
+            "https://typebot4.com", 
+            "https://typebot5.com"
         ];
         
-        let contadorVisitas = 0;
         let indexAtual = 0;
-        const maxVisitas = 200;
+        const maxVisitas = 3;
+        let visitas = parseInt(localStorage.getItem("contadorVisitas")) || 0;
         
         function carregarPagina() {
             document.getElementById("typebotFrame").src = links[indexAtual];
         }
         
-        function atualizarPagina() {
-            contadorVisitas++;
-            if (contadorVisitas >= maxVisitas) {
+        function registrarVisita() {
+            visitas++;
+            localStorage.setItem("contadorVisitas", visitas);
+            if (visitas >= maxVisitas) {
                 indexAtual = (indexAtual + 1) % links.length;
-                contadorVisitas = 0;
+                visitas = 0;
+                localStorage.setItem("contadorVisitas", visitas);
                 carregarPagina();
             }
         }
         
         carregarPagina();
-        setInterval(atualizarPagina, 5000); // Checa a cada 5 segundos se precisa mudar a URL
+        window.addEventListener("load", registrarVisita);
     </script>
 </body>
 </html>

@@ -4,22 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typebot Redirecionamento</title>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBKvV2TOrHxrYyla63oZ5l_iDX4T-yyui4",
-            authDomain: "mudar-links.firebaseapp.com",
-            projectId: "mudar-links",
-            storageBucket: "mudar-links.firebasestorage.app",
-            messagingSenderId: "313579541964",
-            appId: "1:313579541964:web:0dd2caf6580d017831b969"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const docRef = db.collection("visitas").doc("contador");
-
         const links = [
             "https://typebot.co/gabriellaa1", 
             "https://typebot.co/gabriellaa2", 
@@ -27,30 +12,26 @@
             "https://typebot.co/gabriellaa4", 
             "https://typebot.co/gabriellaa5"
         ];
-        
-        async function redirecionar() {
-            const doc = await docRef.get();
-            let indexAtual = 0;
-            let visitas = 0;
-            const maxVisitas = 200;
 
-            if (doc.exists) {
-                const data = doc.data();
-                indexAtual = data.indexAtual;
-                visitas = data.visitas;
+        // Função para verificar se 1 minuto se passou e trocar o link
+        function verificarTrocaDeLink() {
+            const minutoUltimaTroca = localStorage.getItem('minutoUltimaTroca');
+            const agora = new Date().getTime();
+
+            // Se nunca trocou ou passou mais de 1 minuto, troca o link
+            if (!minutoUltimaTroca || (agora - minutoUltimaTroca) >= 1 * 60 * 1000) {
+                const indexAleatorio = Math.floor(Math.random() * links.length);
+                localStorage.setItem('minutoUltimaTroca', agora);
+                localStorage.setItem('linkAtual', links[indexAleatorio]);
+                window.location.href = links[indexAleatorio]; // Redireciona para o novo link
+            } else {
+                const linkAtual = localStorage.getItem('linkAtual');
+                window.location.href = linkAtual; // Redireciona para o link atual
             }
-            
-            visitas++;
-            if (visitas >= maxVisitas) {
-                indexAtual = (indexAtual + 1) % links.length;
-                visitas = 0;
-            }
-            
-            await docRef.set({ indexAtual, visitas });
-            window.location.href = links[indexAtual];
         }
-        
-        redirecionar();
+
+        // Chama a função de verificação assim que a página carrega
+        window.onload = verificarTrocaDeLink;
     </script>
 </head>
 <body>

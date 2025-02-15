@@ -1,35 +1,58 @@
-<?php
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typebot Redirecionamento</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKvV2TOrHxrYyla63oZ5l_iDX4T-yyui4",
+            authDomain: "mudar-links.firebaseapp.com",
+            projectId: "mudar-links",
+            storageBucket: "mudar-links.firebasestorage.app",
+            messagingSenderId: "313579541964",
+            appId: "1:313579541964:web:0dd2caf6580d017831b969"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const docRef = db.collection("visitas").doc("contador");
 
-$arquivo = 'contador.txt';
-$links = [
-    "https://typebot.co/gabriellaa1", 
+        const links = [
+            "https://typebot.co/gabriellaa1", 
             "https://typebot.co/gabriellaa2", 
             "https://typebot.co/gabriellaa3", 
             "https://typebot.co/gabriellaa4", 
             "https://typebot.co/gabriellaa5"
-];
+        ];
+        
+        async function redirecionar() {
+            const doc = await docRef.get();
+            let indexAtual = 0;
+            let visitas = 0;
+            const maxVisitas = 200;
 
-$maxVisitas = 200;
-
-// Se o arquivo não existir, cria com valores iniciais
-if (!file_exists($arquivo)) {
-    file_put_contents($arquivo, "0|0");
-}
-
-// Lê o contador e índice atual
-list($visitas, $indexAtual) = explode('|', file_get_contents($arquivo));
-$visitas = (int) $visitas;
-$indexAtual = (int) $indexAtual;
-
-// Incrementa o contador de visitas
-$visitas++;
-if ($visitas >= $maxVisitas) {
-    $indexAtual = ($indexAtual + 1) % count($links);
-    $visitas = 0;
-}
-
-// Salva o novo valor do contador
-file_put_contents($arquivo, "$visitas|$indexAtual");
-
-// Redireciona para o link correto
-echo $links[$indexAtual];
+            if (doc.exists) {
+                const data = doc.data();
+                indexAtual = data.indexAtual;
+                visitas = data.visitas;
+            }
+            
+            visitas++;
+            if (visitas >= maxVisitas) {
+                indexAtual = (indexAtual + 1) % links.length;
+                visitas = 0;
+            }
+            
+            await docRef.set({ indexAtual, visitas });
+            window.location.href = links[indexAtual];
+        }
+        
+        redirecionar();
+    </script>
+</head>
+<body>
+</body>
+</html>

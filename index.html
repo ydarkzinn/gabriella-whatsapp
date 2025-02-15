@@ -1,36 +1,35 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typebot Redirecionamento</title>
-    <script>
-        const links = [
-            "https://typebot.co/gabriellaa1", 
+<?php
+
+$arquivo = 'contador.txt';
+$links = [
+    "https://typebot.co/gabriellaa1", 
             "https://typebot.co/gabriellaa2", 
             "https://typebot.co/gabriellaa3", 
             "https://typebot.co/gabriellaa4", 
             "https://typebot.co/gabriellaa5"
-        ];
-        
-        let indexAtual = parseInt(localStorage.getItem("indexAtual")) || 0;
-        let visitas = parseInt(localStorage.getItem("contadorVisitas")) || 0;
-        const maxVisitas = 5; // Reduzido para testes, altere para 200 depois
-        
-        function redirecionar() {
-            visitas++;
-            if (visitas >= maxVisitas) {
-                indexAtual = (indexAtual + 1) % links.length;
-                visitas = 0;
-            }
-            localStorage.setItem("indexAtual", indexAtual);
-            localStorage.setItem("contadorVisitas", visitas);
-            window.location.href = links[indexAtual];
-        }
-        
-        redirecionar();
-    </script>
-</head>
-<body>
-</body>
-</html>
+];
+
+$maxVisitas = 200;
+
+// Se o arquivo não existir, cria com valores iniciais
+if (!file_exists($arquivo)) {
+    file_put_contents($arquivo, "0|0");
+}
+
+// Lê o contador e índice atual
+list($visitas, $indexAtual) = explode('|', file_get_contents($arquivo));
+$visitas = (int) $visitas;
+$indexAtual = (int) $indexAtual;
+
+// Incrementa o contador de visitas
+$visitas++;
+if ($visitas >= $maxVisitas) {
+    $indexAtual = ($indexAtual + 1) % count($links);
+    $visitas = 0;
+}
+
+// Salva o novo valor do contador
+file_put_contents($arquivo, "$visitas|$indexAtual");
+
+// Redireciona para o link correto
+echo $links[$indexAtual];

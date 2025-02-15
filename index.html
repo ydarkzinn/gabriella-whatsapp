@@ -3,26 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typebot Automático</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        iframe {
-            width: 90%;
-            height: 80vh;
-            border: none;
-        }
-    </style>
-</head>
-<body>
-    <iframe id="typebotFrame" src=""></iframe>
-    
+    <title>Typebot Redirecionamento</title>
     <script>
         const links = [
             "https://typebot1.com", 
@@ -32,27 +13,24 @@
             "https://typebot5.com"
         ];
         
-        let indexAtual = 0;
-        const maxVisitas = 3;
+        let indexAtual = parseInt(localStorage.getItem("indexAtual")) || 0;
         let visitas = parseInt(localStorage.getItem("contadorVisitas")) || 0;
+        const maxVisitas = 5; // Reduzido para testes, altere para 200 depois
         
-        function carregarPagina() {
-            document.getElementById("typebotFrame").src = links[indexAtual];
-        }
-        
-        function registrarVisita() {
+        function redirecionar() {
             visitas++;
-            localStorage.setItem("contadorVisitas", visitas);
             if (visitas >= maxVisitas) {
                 indexAtual = (indexAtual + 1) % links.length;
                 visitas = 0;
-                localStorage.setItem("contadorVisitas", visitas);
-                carregarPagina();
             }
+            localStorage.setItem("indexAtual", indexAtual);
+            localStorage.setItem("contadorVisitas", visitas);
+            window.location.href = links[indexAtual];
         }
         
-        carregarPagina();
-        window.addEventListener("load", registrarVisita);
+        redirecionar();
     </script>
+</head>
+<body>
 </body>
 </html>
